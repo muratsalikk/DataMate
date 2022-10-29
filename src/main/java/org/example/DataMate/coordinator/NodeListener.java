@@ -1,13 +1,17 @@
 package org.example.DataMate.coordinator;
 
 import org.example.DataMate.AppProperties;
+import org.example.DataMate.node.NodeStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class NodeListener extends Thread {
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
     AppProperties cp;
     int port;
     String hash;
@@ -26,16 +30,25 @@ public class NodeListener extends Thread {
             DataInputStream dis=new DataInputStream(s.getInputStream());
             String  str=(String)dis.readUTF();
             String[] strArray = str.split("@");
-            System.out.println(str);
+            log.info("Message received: " + str);
             if(strArray.length != 3) {
-                System.out.println("Cannot parse node registiration request: " + str);
+                log.info("Cannot parse node registiration request: " + str);
             } else if (strArray[0].equals(hash)) {
                 nodePort=strArray[1];
                 nodeHost=strArray[2];
+                DataOutputStream dot = new DataOutputStream(s.getOutputStream());
+                dot.writeUTF("updateYourStatus");
+                dot.flush();
+                ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+                NodeStatus ns = (NodeStatus) ois.readObject();
+                log.info("New node added:");
+                log.info(ns.toString());
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
     @Override

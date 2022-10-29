@@ -2,7 +2,9 @@ package org.example.DataMate.node;
 
 import org.example.DataMate.AppProperties;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -25,8 +27,13 @@ public class Register {
             DataOutputStream dout=new DataOutputStream(s.getOutputStream());
             dout.writeUTF(cp.getCoordinatorHash()+"@"+cp.getCoordinatorPort() +"@"+InetAddress.getLocalHost().getHostName());
             dout.flush();
-            dout.close();
-            s.close();
+            DataInputStream dis = new DataInputStream(s.getInputStream());
+            if (dis.readUTF().equals("updateYourStatus")) {
+                ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+                NodeStatus ns = new NodeStatusFactory().createNodeStatus();
+                oos.writeObject(ns);
+                oos.flush();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }

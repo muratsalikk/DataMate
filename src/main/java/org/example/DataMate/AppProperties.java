@@ -11,6 +11,7 @@ public class AppProperties {
     String coordinatorHash;
     String coordinatorHost;
     int nodePort;
+    int nodeCommunicationPort;
 
     public AppProperties() {
         getProperties();
@@ -36,7 +37,8 @@ public class AppProperties {
             coordinatorPort = Integer.parseInt(prop.getProperty("coordinator.port"));
             coordinatorHash = prop.getProperty("coordinator.hash");
             coordinatorHost = prop.getProperty("coordinator.host");
-            nodePort = Integer.parseInt(prop.getProperty("node.port"));
+            nodePort = Integer.parseInt(prop.getProperty("node.register.port"));
+            nodeCommunicationPort = Integer.parseInt(prop.getProperty("node.communication.port"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
