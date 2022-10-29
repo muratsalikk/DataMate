@@ -29,6 +29,7 @@ public class NodeStatusFactory {
         ns.setUsedMem(usedMem);
         ns.setAvailableProcessors(availableProcessors);
         ns.setTimeStamp(timeStamp);
+        ns.setStringTimeStamp(stringTimeStamp);
         return ns;
     }
 }

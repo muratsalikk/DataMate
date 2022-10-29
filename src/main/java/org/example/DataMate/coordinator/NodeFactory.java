@@ -1,5 +1,5 @@
 package org.example.DataMate.coordinator;
 
-public class NodeChannelFactory {
+public class NodeFactory {
 
 }
